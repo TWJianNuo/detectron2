@@ -193,10 +193,16 @@ def register_all_cityscapes(root):
         gt_dir = os.path.join(root, gt_dir)
 
         inst_key = key.format(task="instance_seg")
+        # DatasetCatalog.register(
+        #     inst_key,
+        #     lambda x=image_dir, y=gt_dir: load_cityscapes_instances(
+        #         x, y, from_json=True, to_polygons=True
+        #     ),
+        # )
         DatasetCatalog.register(
             inst_key,
             lambda x=image_dir, y=gt_dir: load_cityscapes_instances(
-                x, y, from_json=True, to_polygons=True
+                x, y, from_json=False, to_polygons=True
             ),
         )
         MetadataCatalog.get(inst_key).set(
