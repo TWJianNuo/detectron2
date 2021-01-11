@@ -347,4 +347,17 @@ def _get_builtin_metadata(dataset_name):
             "thing_classes": CITYSCAPES_THING_CLASSES,
             "stuff_classes": CITYSCAPES_STUFF_CLASSES,
         }
+    elif dataset_name == "kitti2cityscapes":
+        # fmt: off
+        KITTI2CITYSCAPES_THING_CLASSES = [
+            "person", "cyclist", "car"
+        ]
+        KITTI2CITYSCAPES_STUFF_CLASSES = [
+            "person", "cyclist", "car"
+        ]
+        # fmt: on
+        return {
+            "thing_classes": KITTI2CITYSCAPES_THING_CLASSES,
+            "stuff_classes": KITTI2CITYSCAPES_STUFF_CLASSES,
+        }
     raise KeyError("No built-in metadata for dataset {}".format(dataset_name))
