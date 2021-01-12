@@ -93,7 +93,8 @@ class Kitti2cityscapesInstanceEvaluator(Kitti2CityscapeEvaluator):
         comm.synchronize()
         if comm.get_rank() > 0:
             return
-        import cityscapesscripts.evaluation.evalInstanceLevelSemanticLabeling as cityscapes_eval
+        # import cityscapesscripts.evaluation.evalInstanceLevelSemanticLabeling as cityscapes_eval
+        import kitti2cityscapesScripts.evaluation.evalInstanceLevelSemanticLabeling as kitti2cityscapes_eval
 
         self._logger.info("Evaluating results under {} ...".format(self._temp_dir))
 
