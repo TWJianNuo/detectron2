@@ -15,7 +15,7 @@ from detectron2.utils.file_io import PathManager
 from .evaluator import DatasetEvaluator
 
 
-class Kitti2CityscapeEvaluator(DatasetEvaluator):
+class Kitti2cityscapeEvaluator(DatasetEvaluator):
     """
     Base class for evaluation using cityscapes API.
     """
@@ -44,7 +44,7 @@ class Kitti2CityscapeEvaluator(DatasetEvaluator):
         )
 
 
-class Kitti2cityscapesInstanceEvaluator(Kitti2CityscapeEvaluator):
+class Kitti2cityscapesInstanceEvaluator(Kitti2cityscapeEvaluator):
     """
     Evaluate instance segmentation results on cityscapes dataset using cityscapes API.
 
@@ -93,17 +93,16 @@ class Kitti2cityscapesInstanceEvaluator(Kitti2CityscapeEvaluator):
         comm.synchronize()
         if comm.get_rank() > 0:
             return
-        # import cityscapesscripts.evaluation.evalInstanceLevelSemanticLabeling as cityscapes_eval
         import kitti2cityscapesScripts.evaluation.evalInstanceLevelSemanticLabeling as kitti2cityscapes_eval
 
         self._logger.info("Evaluating results under {} ...".format(self._temp_dir))
 
         # set some global states in cityscapes evaluation API, before evaluating
-        cityscapes_eval.args.predictionPath = os.path.abspath(self._temp_dir)
-        cityscapes_eval.args.predictionWalk = None
-        cityscapes_eval.args.JSONOutput = False
-        cityscapes_eval.args.colorized = False
-        cityscapes_eval.args.gtInstancesFile = os.path.join(self._temp_dir, "gtInstances.json")
+        kitti2cityscapes_eval.args.predictionPath = os.path.abspath(self._temp_dir)
+        kitti2cityscapes_eval.args.predictionWalk = None
+        kitti2cityscapes_eval.args.JSONOutput = False
+        kitti2cityscapes_eval.args.colorized = False
+        kitti2cityscapes_eval.args.gtInstancesFile = os.path.join(self._temp_dir, "gtInstances.json")
 
         # These lines are adopted from
         # https://github.com/mcordts/cityscapesScripts/blob/master/cityscapesscripts/evaluation/evalInstanceLevelSemanticLabeling.py # noqa
@@ -112,13 +111,13 @@ class Kitti2cityscapesInstanceEvaluator(Kitti2CityscapeEvaluator):
         assert len(
             groundTruthImgList
         ), "Cannot find any ground truth images to use for evaluation. Searched for: {}".format(
-            cityscapes_eval.args.groundTruthSearch
+            kitti2cityscapes_eval.args.groundTruthSearch
         )
         predictionImgList = []
         for gt in groundTruthImgList:
-            predictionImgList.append(cityscapes_eval.getPrediction(gt, cityscapes_eval.args))
-        results = cityscapes_eval.evaluateImgLists(
-            predictionImgList, groundTruthImgList, cityscapes_eval.args
+            predictionImgList.append(kitti2cityscapes_eval.getPrediction(gt, kitti2cityscapes_eval.args))
+        results = kitti2cityscapes_eval.evaluateImgLists(
+            predictionImgList, groundTruthImgList, kitti2cityscapes_eval.args
         )["averages"]
 
         ret = OrderedDict()

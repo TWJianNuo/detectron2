@@ -29,6 +29,7 @@ from detectron2.engine import DefaultTrainer, default_argument_parser, default_s
 from detectron2.evaluation import (
     CityscapesInstanceEvaluator,
     CityscapesSemSegEvaluator,
+    Kitti2cityscapesInstanceEvaluator,
     COCOEvaluator,
     COCOPanopticEvaluator,
     DatasetEvaluators,
@@ -56,6 +57,8 @@ class Trainer(DefaultTrainer):
         For your own dataset, you can simply create an evaluator manually in your
         script and do not have to worry about the hacky if-else logic here.
         """
+        print(
+            "!!!!!!!!!!!!!!!!!Build Build Evaluate  =======================================================")
         if output_folder is None:
             output_folder = os.path.join(cfg.OUTPUT_DIR, "inference")
         evaluator_list = []
@@ -77,6 +80,12 @@ class Trainer(DefaultTrainer):
                 torch.cuda.device_count() >= comm.get_rank()
             ), "CityscapesEvaluator currently do not work with multiple machines."
             return CityscapesInstanceEvaluator(dataset_name)
+        if evaluator_type == "kitti2cityscapes_instance":
+            assert (
+                torch.cuda.device_count() >= comm.get_rank()
+            ), "Kitti2cityscapesEvaluator currently do not work with multiple machines."
+            print("!!!!!!!!!!!!!!!!!Build Kitti2Cityscape Evaluater =======================================================")
+            return Kitti2cityscapesInstanceEvaluator(dataset_name)
         if evaluator_type == "cityscapes_sem_seg":
             assert (
                 torch.cuda.device_count() >= comm.get_rank()
