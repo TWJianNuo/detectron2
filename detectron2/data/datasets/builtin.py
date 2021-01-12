@@ -241,7 +241,7 @@ def register_all_kitti2cityscapes(root):
             ),
         )
         MetadataCatalog.get(inst_key).set(
-            image_dir=image_dir, gt_dir=gt_dir, evaluator_type="cityscapes_instance", **meta
+            image_dir=image_dir, gt_dir=gt_dir, evaluator_type="kitti2cityscapes_instance", **meta
         )
 
 # ==== Predefined splits for PASCAL VOC ===========
