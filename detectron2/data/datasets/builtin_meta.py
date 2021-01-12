@@ -350,10 +350,10 @@ def _get_builtin_metadata(dataset_name):
     elif dataset_name == "kitti2cityscapes":
         # fmt: off
         KITTI2CITYSCAPES_THING_CLASSES = [
-            "person", "cyclist", "car"
+            "pedestrain", "cyclist", "car"
         ]
         KITTI2CITYSCAPES_STUFF_CLASSES = [
-            "person", "cyclist", "car"
+            "pedestrain", "cyclist", "car"
         ]
         # fmt: on
         return {

@@ -20,7 +20,6 @@ except ImportError:
     # OpenCV is an optional dependency at the moment
     pass
 
-
 logger = logging.getLogger(__name__)
 
 def _get_kitti2cityscapes_files(image_dir, gt_dir):
@@ -39,8 +38,9 @@ def _get_kitti2cityscapes_files(image_dir, gt_dir):
             basename = basename[: -len(suffix)]
 
             instance_file = os.path.join(city_gt_dir, basename + "gtFine_instanceIds.png")
+            json_file = os.path.join(city_gt_dir, basename + "gtFine_polygons.json")
 
-            files.append((image_file, instance_file))
+            files.append((image_file, instance_file, json_file))
     assert len(files), "No images found in {}".format(image_dir)
     for f in files[0]:
         assert PathManager.isfile(f), f
@@ -67,19 +67,19 @@ def load_kitti2cityscapes_instances(image_dir, gt_dir, from_json=True, to_polygo
         )
     files = _get_kitti2cityscapes_files(image_dir, gt_dir)
 
-    logger.info("Preprocessing cityscapes annotations ...")
+    logger.info("Preprocessing kitti2citycsapes annotations ...")
     # This is still not fast: all workers will execute duplicate works and will
     # take up to 10m on a 8GPU server.
     pool = mp.Pool(processes=max(mp.cpu_count() // get_world_size() // 2, 4))
 
     ret = pool.map(
-        functools.partial(_cityscapes_files_to_dict, from_json=from_json, to_polygons=to_polygons),
+        functools.partial(_kitti2cityscapes_files_to_dict, from_json=from_json, to_polygons=to_polygons),
         files,
     )
     logger.info("Loaded {} images from {}".format(len(ret), image_dir))
 
     # Map cityscape ids to contiguous ids
-    from cityscapesscripts.helpers.labels import labels
+    from .kitti2cityscapes_label import labels
 
     labels = [l for l in labels if l.hasInstances and not l.ignoreInEval]
     dataset_id_to_contiguous_id = {l.id: idx for idx, l in enumerate(labels)}
@@ -101,9 +101,9 @@ def _kitti2cityscapes_files_to_dict(files, from_json, to_polygons):
     Returns:
         A dict in Detectron2 Dataset format.
     """
-    from cityscapesscripts.helpers.labels import id2label, name2label
+    from .kitti2cityscapes_label import id2label, name2label
 
-    image_file, instance_id_file, _, json_file = files
+    image_file, instance_id_file, json_file = files
 
     annos = []
 

@@ -12,6 +12,10 @@ from torch.nn.parallel import DataParallel, DistributedDataParallel
 import detectron2.utils.comm as comm
 from detectron2.utils.events import EventStorage, get_event_storage
 
+from PIL import Image, ImageFont, ImageDraw, ImageEnhance
+from detectron2.data.datasets.kitti2cityscapes_label import *
+from shapely.geometry import MultiPolygon, Polygon
+
 __all__ = ["HookBase", "TrainerBase", "SimpleTrainer", "AMPTrainer"]
 
 
@@ -236,6 +240,7 @@ class SimpleTrainer(TrainerBase):
         losses.backward()
 
         self._write_metrics(loss_dict, data_time)
+        self._write_vis_data(data)
 
         """
         If you need gradient clipping/scaling or other processing, you can
@@ -285,6 +290,24 @@ class SimpleTrainer(TrainerBase):
             if len(metrics_dict) > 1:
                 storage.put_scalars(**metrics_dict)
 
+    def _write_vis_data(self, data):
+        if comm.is_main_process():
+            if np.random.randint(0, 50) == 0:
+                storage = get_event_storage()
+                img = data[0]['image'].cpu().permute([1,2,0]).numpy().astype(np.uint8)
+                img = Image.fromarray(np.stack(Image.fromarray(img).split()[::-1], axis=2))
+
+                instances = data[0]['instances']
+                gt_boxes = instances._fields['gt_boxes'].tensor.cpu().numpy()
+                gt_classes = instances._fields['gt_classes'].cpu().numpy()
+
+                if len(gt_boxes) >= 1:
+                    draw = ImageDraw.Draw(img)
+                    for idx, gt_box in enumerate(gt_boxes):
+                        color = trainId2label[gt_classes[idx]].color
+                        draw.rectangle(((gt_box[0], gt_box[1]), (gt_box[2], gt_box[3])), outline=color)
+                img_tensor = torch.from_numpy(np.array(img)).permute([2,0,1])
+                storage.put_image(img_name=data[0]['file_name'].split('/')[-1].split('.')[0], img_tensor=img_tensor)
 
 class AMPTrainer(SimpleTrainer):
     """

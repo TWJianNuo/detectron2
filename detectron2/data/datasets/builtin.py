@@ -199,10 +199,16 @@ def register_all_cityscapes(root):
         gt_dir = os.path.join(root, gt_dir)
 
         inst_key = key.format(task="instance_seg")
+        # DatasetCatalog.register(
+        #     inst_key,
+        #     lambda x=image_dir, y=gt_dir: load_cityscapes_instances(
+        #         x, y, from_json=False, to_polygons=True
+        #     ),
+        # )
         DatasetCatalog.register(
             inst_key,
             lambda x=image_dir, y=gt_dir: load_cityscapes_instances(
-                x, y, from_json=False, to_polygons=True
+                x, y, from_json=True, to_polygons=True
             ),
         )
         MetadataCatalog.get(inst_key).set(
@@ -231,7 +237,7 @@ def register_all_kitti2cityscapes(root):
         DatasetCatalog.register(
             inst_key,
             lambda x=image_dir, y=gt_dir: load_kitti2cityscapes_instances(
-                x, y, from_json=False, to_polygons=True
+                x, y, from_json=True, to_polygons=True
             ),
         )
         MetadataCatalog.get(inst_key).set(
@@ -280,6 +286,7 @@ if __name__.endswith(".builtin"):
     register_all_coco(_root)
     register_all_lvis(_root)
     register_all_cityscapes(_root)
+    register_all_kitti2cityscapes(_root)
     register_all_cityscapes_panoptic(_root)
     register_all_pascal_voc(_root)
     register_all_ade20k(_root)
