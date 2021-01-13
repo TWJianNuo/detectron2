@@ -24,8 +24,8 @@ from __future__ import print_function, absolute_import, division
 import os, glob, sys
 
 # cityscapes imports
-from cityscapesscripts.helpers.csHelpers import printError
-from cityscapesscripts.preparation.json2labelImg import json2labelImg
+from kitti2cityscapesScripts.helpers.csHelpers import printError
+from kitti2cityscapesScripts.preparation.json2labelImg import json2labelImg
 
 # The main method
 def main():

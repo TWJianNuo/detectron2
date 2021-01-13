@@ -24,8 +24,8 @@ from PIL import Image
 from PIL import ImageDraw
 
 # cityscapes imports
-from cityscapesscripts.helpers.annotation import Annotation
-from cityscapesscripts.helpers.labels     import name2label
+from kitti2cityscapesScripts.helpers.annotation import Annotation
+from kitti2cityscapesScripts.helpers.labels     import name2label
 
 # Print the information
 def printHelp():

@@ -12,7 +12,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
 
-from cityscapesscripts.helpers.labels import name2label
+from kitti2cityscapesScripts.helpers.labels import name2label
 
 
 def csToMplColor(label):

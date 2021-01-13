@@ -32,11 +32,11 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 # Helper classes
 #################
 
-from cityscapesscripts.helpers.version import version as VERSION
+from kitti2cityscapesScripts.helpers.version import version as VERSION
 
 # annotation helper
-from cityscapesscripts.helpers.annotation import Point, Annotation, CsPoly
-from cityscapesscripts.helpers.labels import name2label, assureSingleInstanceName
+from kitti2cityscapesScripts.helpers.annotation import Point, Annotation, CsPoly
+from kitti2cityscapesScripts.helpers.labels import name2label, assureSingleInstanceName
 
 # Helper class that contains the current configuration of the Gui
 # This config is loaded when started and saved when leaving

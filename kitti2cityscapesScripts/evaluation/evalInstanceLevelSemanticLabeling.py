@@ -40,8 +40,8 @@ import fnmatch
 from copy import deepcopy
 
 # Cityscapes imports
-from cityscapesscripts.helpers.csHelpers import *
-from cityscapesscripts.evaluation.instances2dict import instances2dict
+from kitti2cityscapesScripts.helpers.csHelpers import *
+from kitti2cityscapesScripts.evaluation.instances2dict import instances2dict
 
 
 ###################################
@@ -656,7 +656,7 @@ def evaluateImgLists(predictionList, groundTruthList, args):
     gtInstances = getGtInstances(groundTruthList,args)
     # match predictions and ground truth
     matches = matchGtWithPreds(predictionList,groundTruthList,gtInstances,args)
-    writeDict2JSON(matches,"matches.json")
+    writeDict2JSON(matches, "matches.json")
     # evaluate matches
     apScores = evaluateMatches(matches, args)
     # averages

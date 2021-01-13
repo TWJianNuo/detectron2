@@ -26,8 +26,8 @@ import numpy as np
 from PIL import Image
 
 # cityscapes imports
-from cityscapesscripts.helpers.csHelpers import printError
-from cityscapesscripts.helpers.labels import id2label, labels
+from kitti2cityscapesScripts.helpers.csHelpers import printError
+from kitti2cityscapesScripts.helpers.labels import id2label, labels
 
 
 # The main method

@@ -29,13 +29,13 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 # Helper classes
 #################
 
-from cityscapesscripts.helpers.version import version as VERSION
+from kitti2cityscapesScripts.helpers.version import version as VERSION
 
 # annotation helpers
-from cityscapesscripts.helpers.annotation import Annotation, CsObjectType
-from cityscapesscripts.helpers.labels import name2label, assureSingleInstanceName
-from cityscapesscripts.helpers.labels_cityPersons import name2labelCp
-from cityscapesscripts.helpers.box3dImageTransform import Box3dImageTransform
+from kitti2cityscapesScripts.helpers.annotation import Annotation, CsObjectType
+from kitti2cityscapesScripts.helpers.labels import name2label, assureSingleInstanceName
+from kitti2cityscapesScripts.helpers.labels_cityPersons import name2labelCp
+from kitti2cityscapesScripts.helpers.box3dImageTransform import Box3dImageTransform
 
 
 from collections import namedtuple

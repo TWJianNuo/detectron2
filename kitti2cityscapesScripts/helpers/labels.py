@@ -88,3 +88,21 @@ for label in labels:
         category2labels[category].append(label)
     else:
         category2labels[category] = [label]
+
+def assureSingleInstanceName( name ):
+    # if the name is known, it is not a group
+    if name in name2label:
+        return name
+    # test if the name actually denotes a group
+    if not name.endswith("group"):
+        return None
+    # remove group
+    name = name[:-len("group")]
+    # test if the new name exists
+    if not name in name2label:
+        return None
+    # test if the new name denotes a label that actually has instances
+    if not name2label[name].hasInstances:
+        return None
+    # all good then
+    return name

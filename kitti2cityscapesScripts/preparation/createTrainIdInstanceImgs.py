@@ -27,8 +27,8 @@ from __future__ import print_function, absolute_import, division
 import os, glob, sys
 
 # cityscapes imports
-from cityscapesscripts.helpers.csHelpers import printError
-from cityscapesscripts.preparation.json2instanceImg import json2instanceImg
+from kitti2cityscapesScripts.helpers.csHelpers import printError
+from kitti2cityscapesScripts.preparation.json2instanceImg import json2instanceImg
 
 
 # The main method

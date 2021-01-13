@@ -7,8 +7,8 @@ from __future__ import print_function, absolute_import, division
 import os, sys
 
 # Cityscapes imports
-from cityscapesscripts.evaluation.instance import *
-from cityscapesscripts.helpers.csHelpers import *
+from kitti2cityscapesScripts.evaluation.instance import *
+from kitti2cityscapesScripts.helpers.csHelpers import *
 
 def instances2dict(imageFileList, verbose=False):
     imgCount     = 0
