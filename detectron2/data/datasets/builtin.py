@@ -233,11 +233,13 @@ def register_all_kitti2cityscapes(root):
         image_dir = os.path.join(root, image_dir)
         gt_dir = os.path.join(root, gt_dir)
 
+        task = key.split('_')[-1]
+
         inst_key = key.format(task="instance_seg")
         DatasetCatalog.register(
             inst_key,
             lambda x=image_dir, y=gt_dir: load_kitti2cityscapes_instances(
-                x, y, from_json=True, to_polygons=True
+                x, y, from_json=True, to_polygons=True, istest=(task == 'test')
             ),
         )
         MetadataCatalog.get(inst_key).set(

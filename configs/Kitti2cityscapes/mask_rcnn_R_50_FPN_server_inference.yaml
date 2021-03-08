@@ -1,9 +1,6 @@
 _BASE_: "../Base-RCNN-FPN.yaml"
 MODEL:
-  # WEIGHTS: "detectron2://ImageNetPretrained/MSRA/R-50.pkl"
-  # For better, more stable performance initialize from COCO
-  # WEIGHTS: "detectron2://COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x/137849600/model_final_f10217.pkl"
-  WEIGHTS: "/home/shengjie/Documents/supporting_projects/detectron2/output/model_final.pth"
+  WEIGHTS: "/research/cvl-zhusheng/detectron2/tools/output/model_final.pth"
   MASK_ON: True
   ROI_HEADS:
     NUM_CLASSES: 3
@@ -18,11 +15,11 @@ INPUT:
   MAX_SIZE_TEST: 2048
 DATASETS:
   TRAIN: ("kitti2cityscapes_fine_instance_seg_train",)
-  TEST: ("kitti2cityscapes_fine_instance_seg_val",)
+  TEST: ("kitti2cityscapes_fine_instance_seg_test",)
 SOLVER:
   BASE_LR: 0.01
   STEPS: (18000,)
   MAX_ITER: 24000
-  IMS_PER_BATCH: 4
+  IMS_PER_BATCH: 16
 TEST:
-  EVAL_PERIOD: 10
+  EVAL_PERIOD: 8000

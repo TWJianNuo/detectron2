@@ -22,7 +22,7 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
-def _get_kitti2cityscapes_files(image_dir, gt_dir):
+def _get_kitti2cityscapes_files(image_dir, gt_dir, istest):
     files = []
     # scan through the directory
     cities = PathManager.ls(image_dir)
@@ -34,20 +34,26 @@ def _get_kitti2cityscapes_files(image_dir, gt_dir):
             image_file = os.path.join(city_img_dir, basename)
 
             suffix = "leftImg8bit.png"
-            assert basename.endswith(suffix), basename
-            basename = basename[: -len(suffix)]
+            if basename.endswith(suffix) == basename:
+                basename = basename[: -len(suffix)]
 
-            instance_file = os.path.join(city_gt_dir, basename + "gtFine_instanceIds.png")
-            json_file = os.path.join(city_gt_dir, basename + "gtFine_polygons.json")
+            if istest:
+                instance_file = None
+                json_file = None
+            else:
+                instance_file = os.path.join(city_gt_dir, basename + "gtFine_instanceIds.png")
+                json_file = os.path.join(city_gt_dir, basename + "gtFine_polygons.json")
 
             files.append((image_file, instance_file, json_file))
     assert len(files), "No images found in {}".format(image_dir)
     for f in files[0]:
+        if f is None:
+            continue
         assert PathManager.isfile(f), f
     return files
 
 
-def load_kitti2cityscapes_instances(image_dir, gt_dir, from_json=True, to_polygons=True):
+def load_kitti2cityscapes_instances(image_dir, gt_dir, from_json=True, to_polygons=True, istest=False):
     """
     Args:
         image_dir (str): path to the raw dataset. e.g., "~/cityscapes/leftImg8bit/train".
@@ -65,7 +71,7 @@ def load_kitti2cityscapes_instances(image_dir, gt_dir, from_json=True, to_polygo
             "Cityscapes's json annotations are in polygon format. "
             "Converting to mask format is not supported now."
         )
-    files = _get_kitti2cityscapes_files(image_dir, gt_dir)
+    files = _get_kitti2cityscapes_files(image_dir, gt_dir, istest)
 
     logger.info("Preprocessing kitti2citycsapes annotations ...")
     # This is still not fast: all workers will execute duplicate works and will
@@ -73,22 +79,23 @@ def load_kitti2cityscapes_instances(image_dir, gt_dir, from_json=True, to_polygo
     pool = mp.Pool(processes=max(mp.cpu_count() // get_world_size() // 2, 4))
 
     ret = pool.map(
-        functools.partial(_kitti2cityscapes_files_to_dict, from_json=from_json, to_polygons=to_polygons),
+        functools.partial(_kitti2cityscapes_files_to_dict, from_json=from_json, to_polygons=to_polygons, istest=istest),
         files,
     )
     logger.info("Loaded {} images from {}".format(len(ret), image_dir))
 
-    # Map cityscape ids to contiguous ids
-    from .kitti2cityscapes_label import labels
+    if not istest:
+        # Map cityscape ids to contiguous ids
+        from .kitti2cityscapes_label import labels
 
-    labels = [l for l in labels if l.hasInstances and not l.ignoreInEval]
-    dataset_id_to_contiguous_id = {l.id: idx for idx, l in enumerate(labels)}
-    for dict_per_image in ret:
-        for anno in dict_per_image["annotations"]:
-            anno["category_id"] = dataset_id_to_contiguous_id[anno["category_id"]]
+        labels = [l for l in labels if l.hasInstances and not l.ignoreInEval]
+        dataset_id_to_contiguous_id = {l.id: idx for idx, l in enumerate(labels)}
+        for dict_per_image in ret:
+            for anno in dict_per_image["annotations"]:
+                anno["category_id"] = dataset_id_to_contiguous_id[anno["category_id"]]
     return ret
 
-def _kitti2cityscapes_files_to_dict(files, from_json, to_polygons):
+def _kitti2cityscapes_files_to_dict(files, from_json, to_polygons, istest):
     """
     Parse cityscapes annotation files to a instance segmentation dataset dict.
 
@@ -104,6 +111,13 @@ def _kitti2cityscapes_files_to_dict(files, from_json, to_polygons):
     from .kitti2cityscapes_label import id2label, name2label
 
     image_file, instance_id_file, json_file = files
+
+    if istest:
+        ret = {
+            "file_name": image_file,
+            "image_id": os.path.basename(image_file)
+        }
+        return ret
 
     annos = []
 
