@@ -233,6 +233,7 @@ class VisualizationDemo(object):
         seman_path = os.path.join(exportfold_seman, imgname)
 
         if os.path.exists(ins_path) and os.path.exists(seman_path):
+            print("%s generated, skip" % ins_path)
             return
 
         os.makedirs(exportfold_ins, exist_ok=True)

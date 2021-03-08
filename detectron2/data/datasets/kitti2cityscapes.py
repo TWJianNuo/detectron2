@@ -40,6 +40,16 @@ def _get_kitti2cityscapes_files(image_dir, gt_dir, istest):
             if istest:
                 instance_file = None
                 json_file = None
+
+                foldname = os.path.basename(city_img_dir)
+                date = foldname[0:10]
+                seq = foldname[0:26]
+
+                target_root = '/scratch1/zhusheng/kitti_eigen_inspred'
+                inspredpath = os.path.join(target_root, date, seq, 'insmap', basename)
+                semanpredpath = os.path.join(target_root, date, seq, 'semanmap', basename)
+                if os.path.exists(inspredpath) and os.path.exists(semanpredpath):
+                    continue
             else:
                 instance_file = os.path.join(city_gt_dir, basename + "gtFine_instanceIds.png")
                 json_file = os.path.join(city_gt_dir, basename + "gtFine_polygons.json")
