@@ -388,12 +388,7 @@ class Trainer(DefaultTrainer):
     own training loop. You can use "tools/plain_train_net.py" as an example.
     """
     @classmethod
-    def inference_with_TTA(cls, cfg, model, args):
-        logger = logging.getLogger("detectron2.trainer")
-        # In the end of training, run an evaluation with TTA
-        # Only support some R-CNN models.
-        logger.info("Running inference with test-time augmentation ...")
-        model = GeneralizedRCNNWithTTA(cfg, model)
+    def inference_without_TTA(cls, cfg, model, args):
         cls.inference(cfg, model, args)
         return
 
@@ -438,7 +433,7 @@ def main(args):
             cfg.MODEL.WEIGHTS, resume=args.resume
         )
         # res = Trainer.test_with_TTA(cfg, model)
-        Trainer.inference_with_TTA(cfg, model, args)
+        Trainer.inference_without_TTA(cfg, model, args)
         return
     else:
         raise Exception("Only evaluation supported")
