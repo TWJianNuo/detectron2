@@ -45,8 +45,8 @@ def _get_kitti2cityscapes_files(image_dir, gt_dir, istest):
                 date = foldname[0:10]
                 seq = foldname[0:26]
 
-                target_root = '/scratch1/zhusheng/kitti_eigen_inspred'
-                # target_root = '/media/shengjie/c9c81c9f-511c-41c6-bfe0-2fc19666fb32/Data/kitti_eigen_inspred'
+                # target_root = '/scratch1/zhusheng/kitti_eigen_inspred'
+                target_root = '/media/shengjie/c9c81c9f-511c-41c6-bfe0-2fc19666fb32/Data/kitti_eigen_inspred'
                 inspredpath = os.path.join(target_root, date, seq, 'insmap/image_02', basename)
                 semanpredpath = os.path.join(target_root, date, seq, 'semanmap/image_02', basename)
                 if os.path.exists(inspredpath) and os.path.exists(semanpredpath):

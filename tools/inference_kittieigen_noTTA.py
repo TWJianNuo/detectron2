@@ -500,7 +500,7 @@ def build_inference_dataset(args, removeorg=True):
 
     assert len(entries) * 2 == len(srcs)
     for odomseq in odomseqs:
-        dstfoldl = os.path.join(args.kitti2cityscaperoot, 'leftImg8bit/test', '{}_left'.format(seq.split('/')[-1]))
+        dstfoldl = os.path.join(args.kitti2cityscaperoot, 'leftImg8bit/test', '{}_left'.format(odomseq.split('/')[-1]))
         leftimgs = glob.glob(os.path.join(args.kittiodomroot, odomseq, 'image_02/data', "*.png"))
         for leftimg in leftimgs:
             imgname = os.path.basename(leftimg)
@@ -513,7 +513,7 @@ def build_inference_dataset(args, removeorg=True):
         os.makedirs(dstfoldl, exist_ok=True)
 
     for k in tqdm(range(len(srcs))):
-        if os.path.exists(dsts[k]):
+        if os.path.isfile(dsts[k]):
             continue
         else:
             copyfile(srcs[k], dsts[k])
