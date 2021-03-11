@@ -512,7 +512,7 @@ def build_inference_dataset(args, removeorg=True):
             dsts.append(dstl)
         os.makedirs(dstfoldl, exist_ok=True)
 
-    for k in tqdm(range(len(entries) * 2)):
+    for k in tqdm(range(len(srcs))):
         if os.path.exists(dsts[k]):
             continue
         else:
